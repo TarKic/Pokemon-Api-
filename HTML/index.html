@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link rel="stylesheet" href="style.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Poke api
+    </title>
+</head>
+<body>
+    <main class="container"> 
+    <input type="text" class="search" id="pokemon" placeholder="Buscar Pokemon..." onkeypress="fetchData(event)" >
+    <img src="https://upload.wikimedia.org/wikipedia/commons/b/b1/Pok%C3%A9ball.png" class="img"  id='img'>
+    <p class="text" id='text'> Bienvenido </p>
+    </main>
+
+
+    <script>
+
+
+
+async function fetchData(e){
+    if ( e.key == "Enter"){        
+        const inputValue            = document.getElementById("pokemon").value;
+        console.log(inputValue)
+        if ( inputValue == "" ){
+            document.getElementById("text").innerText  = "Ingresa el pokemon que estas buscando!";
+            document.getElementById("img").src          = "https://upload.wikimedia.org/wikipedia/commons/b/b1/Pok%C3%A9ball.png"
+        } else {
+            const inputValueNormalized  = inputValue.toLowerCase()
+            const data                  = await fetch(`https://pokeapi.co/api/v2/pokemon/${inputValueNormalized}`)
+           
+            if (data.status == 200){
+                const json                  = await data.json();
+                document.getElementById("text").innerText  = json.name
+                document.getElementById("img").src          = json.sprites.front_default
+                cleanInput()
+            } else if (data.status == 404) {
+                document.getElementById("text").innerText  = "Ese pokemon no existe"
+                document.getElementById("img").src          = "https://upload.wikimedia.org/wikipedia/commons/b/b1/Pok%C3%A9ball.png"
+                cleanInput()
+            } else {
+                document.getElementById("text").innerText  = "ERROR"
+                document.getElementById("img").src          = "https://upload.wikimedia.org/wikipedia/commons/b/b1/Pok%C3%A9ball.png"
+                cleanInput()
+            }
+        }         
+    }    
+}
+
+function cleanInput(){
+    document.getElementById("pokemon").value = "";
+}
+    
+    
+
+    </script>
+</body>
+</html>
